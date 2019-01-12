@@ -1,6 +1,6 @@
 package ru.trubin23.tasks_mvp_clean;
 
-public abstract class UseCase<Q extends UseCase.RequestValues, P extends UseCase.ResponseValues> {
+public abstract class UseCase<Q extends UseCase.RequestValues, P extends UseCase.ResponseValue> {
 
     public Q requestValues;
 
@@ -16,7 +16,7 @@ public abstract class UseCase<Q extends UseCase.RequestValues, P extends UseCase
 
     }
 
-    public interface ResponseValues {
+    public interface ResponseValue {
 
     }
 

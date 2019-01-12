@@ -29,14 +29,14 @@ public class UseCaseThreadPoolScheduler implements UseCaseScheduler {
     }
 
     @Override
-    public <V extends UseCase.ResponseValues> void notifyResponse(
+    public <V extends UseCase.ResponseValue> void notifyResponse(
             final V response, final UseCase.UseCaseCallback<V> useCaseCallback) {
 
         mHandler.post(() -> useCaseCallback.onSuccess(response));
     }
 
     @Override
-    public <V extends UseCase.ResponseValues> void onError(
+    public <V extends UseCase.ResponseValue> void onError(
             final UseCase.UseCaseCallback<V> useCaseCallback) {
 
         mHandler.post(useCaseCallback::onError);
