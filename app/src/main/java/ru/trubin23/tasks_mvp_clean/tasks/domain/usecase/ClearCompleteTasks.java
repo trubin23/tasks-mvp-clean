@@ -6,7 +6,7 @@ import ru.trubin23.tasks_mvp_clean.UseCase;
 import ru.trubin23.tasks_mvp_clean.data.TasksRepository;
 
 public class ClearCompleteTasks
-    extends UseCase<ClearCompleteTasks.RequestValues, ClearCompleteTasks.RequestValue> {
+    extends UseCase<ClearCompleteTasks.RequestValues, ClearCompleteTasks.ResponseValue> {
 
     private final TasksRepository mTasksRepository;
 
@@ -23,7 +23,7 @@ public class ClearCompleteTasks
 
     }
 
-    public static final class RequestValue implements UseCase.ResponseValue {
+    public static final class ResponseValue implements UseCase.ResponseValue {
 
     }
 

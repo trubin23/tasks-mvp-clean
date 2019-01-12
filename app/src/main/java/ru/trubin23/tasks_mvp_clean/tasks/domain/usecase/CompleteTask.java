@@ -5,7 +5,7 @@ import android.support.annotation.NonNull;
 import ru.trubin23.tasks_mvp_clean.UseCase;
 import ru.trubin23.tasks_mvp_clean.data.TasksRepository;
 
-public class CompleteTask extends UseCase<CompleteTask.RequestValues, CompleteTask.RequestValue> {
+public class CompleteTask extends UseCase<CompleteTask.RequestValues, CompleteTask.ResponseValue> {
 
     private final TasksRepository mTasksRepository;
 
@@ -22,7 +22,7 @@ public class CompleteTask extends UseCase<CompleteTask.RequestValues, CompleteTa
 
     }
 
-    public static final class RequestValue implements UseCase.ResponseValue {
+    public static final class ResponseValue implements UseCase.ResponseValue {
 
     }
 
