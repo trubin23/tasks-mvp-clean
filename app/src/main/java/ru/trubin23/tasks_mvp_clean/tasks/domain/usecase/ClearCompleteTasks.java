@@ -15,8 +15,9 @@ public class ClearCompleteTasks
     }
 
     @Override
-    protected void executeUseCase(RequestValues requestValues) {
-
+    protected void executeUseCase(RequestValues values) {
+        mTasksRepository.clearCompletedTask();
+        useCaseCallback.onSuccess(new ResponseValue());
     }
 
     public static final class RequestValues implements UseCase.RequestValues{
@@ -26,5 +27,4 @@ public class ClearCompleteTasks
     public static final class ResponseValue implements UseCase.ResponseValue {
 
     }
-
 }

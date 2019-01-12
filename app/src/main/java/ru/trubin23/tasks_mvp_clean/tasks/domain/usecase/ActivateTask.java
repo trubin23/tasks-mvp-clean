@@ -14,12 +14,23 @@ public class ActivateTask extends UseCase<ActivateTask.RequestValues, ActivateTa
     }
 
     @Override
-    protected void executeUseCase(RequestValues requestValues) {
-
+    protected void executeUseCase(RequestValues values) {
+        String taskId = values.getTaskId();
+        mTasksRepository.completedTask(taskId, true);
+        useCaseCallback.onSuccess(new ResponseValue());
     }
 
     public static final class RequestValues implements UseCase.RequestValues {
 
+        private final String mTaskId;
+
+        public RequestValues(@NonNull String taskId) {
+            mTaskId = taskId;
+        }
+
+        String getTaskId() {
+            return mTaskId;
+        }
     }
 
     public static final class ResponseValue implements UseCase.ResponseValue {
