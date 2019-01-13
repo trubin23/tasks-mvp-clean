@@ -11,8 +11,12 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -108,6 +112,51 @@ public class TasksFragment extends Fragment implements TasksContract.View {
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.tasks_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_filter:
+                showFilteringPopUpMenu();
+                return true;
+            case R.id.menu_refresh:
+                mPresenter.loadTasks(true);
+                return true;
+            case R.id.menu_clear:
+                mPresenter.clearCompletedTask();
+                return true;
+        }
+        return false;
+    }
+
+    private void showFilteringPopUpMenu() {
+        PopupMenu popupMenu = new PopupMenu(getContext(),
+                getActivity().findViewById(R.id.menu_filter));
+        popupMenu.getMenuInflater().inflate(R.menu.filter_tasks, popupMenu.getMenu());
+
+        popupMenu.setOnMenuItemClickListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.menu_active:
+                    mPresenter.setFiltering(TasksFilterType.ACTIVE_TASKS);
+                    break;
+                case R.id.menu_completed:
+                    mPresenter.setFiltering(TasksFilterType.COMPLETED_TASKS);
+                    break;
+                default:
+                    mPresenter.setFiltering(TasksFilterType.ALL_TASKS);
+                    break;
+            }
+            mPresenter.loadTasks(false);
+            return true;
+        });
+
+        popupMenu.show();
+    }
+
+    @Override
     public void showTaskMarkedComplete() {
         showMessage(getString(R.string.task_marked_complete));
     }
@@ -140,5 +189,10 @@ public class TasksFragment extends Fragment implements TasksContract.View {
     @Override
     public void showLoadingTasksError() {
         showMessage(getString(R.string.loading_tasks_error));
+    }
+
+    @Override
+    public void showCompletedTasksCleared(){
+        showMessage(getString(R.string.completed_tasks_cleared));
     }
 }

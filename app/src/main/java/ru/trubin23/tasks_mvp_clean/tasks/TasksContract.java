@@ -18,6 +18,8 @@ public interface TasksContract {
         void showTaskMarkedActive();
 
         void showLoadingTasksError();
+
+        void showCompletedTasksCleared();
     }
 
     interface Presenter extends BasePresenter {
@@ -35,5 +37,7 @@ public interface TasksContract {
         void loadTasks(boolean forceUpdate);
 
         void addNewTask();
+
+        void clearCompletedTask();
     }
 }

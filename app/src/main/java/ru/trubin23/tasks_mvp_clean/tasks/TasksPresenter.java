@@ -109,4 +109,21 @@ public class TasksPresenter implements TasksContract.Presenter {
                     }
                 });
     }
+
+    @Override
+    public void clearCompletedTask() {
+        mUseCaseHandler.execute(mClearCompleteTasks, new ClearCompleteTasks.RequestValues(),
+                new UseCase.UseCaseCallback<ClearCompleteTasks.ResponseValue>() {
+                    @Override
+                    public void onSuccess(ClearCompleteTasks.ResponseValue response) {
+                        mTasksView.showCompletedTasksCleared();
+                        loadTasks(false, false);
+                    }
+
+                    @Override
+                    public void onError() {
+                        mTasksView.showLoadingTasksError();
+                    }
+                });
+    }
 }
