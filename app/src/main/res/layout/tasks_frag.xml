@@ -47,6 +47,20 @@
             app:layout_constraintStart_toStartOf="@+id/no_tasks_icon"
             app:layout_constraintTop_toBottomOf="@+id/no_tasks_icon" />
 
+        <android.support.constraint.Group
+            android:id="@+id/list_tasks"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            app:constraint_referenced_ids="filtering_label,recycler_view" />
+
+        <android.support.constraint.Group
+            android:id="@+id/no_tasks"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            app:constraint_referenced_ids="no_tasks_icon,no_tasks_text" />
+
     </android.support.constraint.ConstraintLayout>
 
 </ru.trubin23.tasks_mvp_clean.tasks.ScrollChildSwipeRefreshLayout>
