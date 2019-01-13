@@ -2,6 +2,7 @@ package ru.trubin23.tasks_mvp_clean.tasks;
 
 import android.support.annotation.NonNull;
 
+import ru.trubin23.tasks_mvp_clean.UseCase;
 import ru.trubin23.tasks_mvp_clean.UseCaseHandler;
 import ru.trubin23.tasks_mvp_clean.tasks.domain.usecase.ActivateTask;
 import ru.trubin23.tasks_mvp_clean.tasks.domain.usecase.ClearCompleteTasks;
@@ -45,6 +46,10 @@ public class TasksPresenter implements TasksContract.Presenter {
 
     }
 
+    private void loadTasks(boolean forceUpdate, final boolean showLoadingUI) {
+
+    }
+
     @Override
     public void setFiltering(TasksFilterType filterType) {
         mFilterType = filterType;
@@ -53,5 +58,44 @@ public class TasksPresenter implements TasksContract.Presenter {
     @Override
     public TasksFilterType getFiltering() {
         return mFilterType;
+    }
+
+    @Override
+    public void openTaskDetails(@NonNull String taskId) {
+        mTasksView.showTaskDetail(taskId);
+    }
+
+    @Override
+    public void completeTask(@NonNull String taskId) {
+        mUseCaseHandler.execute(mCompleteTask, new CompleteTask.RequestValues(taskId),
+                new UseCase.UseCaseCallback<CompleteTask.ResponseValue>() {
+                    @Override
+                    public void onSuccess(CompleteTask.ResponseValue response) {
+                        mTasksView.showTaskMarkedComplete();
+                        loadTasks(false, false);
+                    }
+
+                    @Override
+                    public void onError() {
+                        mTasksView.showLoadingTasksError();
+                    }
+                });
+    }
+
+    @Override
+    public void activateTask(@NonNull String taskId) {
+        mUseCaseHandler.execute(mActivateTask, new ActivateTask.RequestValues(taskId),
+                new UseCase.UseCaseCallback<ActivateTask.ResponseValue>() {
+                    @Override
+                    public void onSuccess(ActivateTask.ResponseValue response) {
+                        mTasksView.showTaskMarkedActive();
+                        loadTasks(false, false);
+                    }
+
+                    @Override
+                    public void onError() {
+                        mTasksView.showLoadingTasksError();
+                    }
+                });
     }
 }
