@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import ru.trubin23.tasks_mvp_clean.Injection;
 import ru.trubin23.tasks_mvp_clean.R;
 import ru.trubin23.tasks_mvp_clean.statistics.StatisticsActivity;
 import ru.trubin23.tasks_mvp_clean.util.ActivityUtils;
@@ -39,7 +40,13 @@ public class TasksActivity extends AppCompatActivity {
                 getSupportFragmentManager(), tasksFragment, R.id.contentFrame);
         }
 
-        mTasksPresenter = new TasksPresenter();
+        mTasksPresenter = new TasksPresenter(
+            Injection.provideUseCaseHandler(),
+            tasksFragment,
+            Injection.provideGetTasks(getApplicationContext()),
+            Injection.provideActivateTask(getApplicationContext()),
+            Injection.provideCompleteTask(getApplicationContext()),
+            Injection.provideClearCompleteTasks(getApplicationContext()));
 
         if (savedInstanceState != null) {
             TasksFilterType tasksFilterType =
