@@ -46,6 +46,12 @@ public class TasksPresenter implements TasksContract.Presenter {
 
     }
 
+    @Override
+    public void loadTasks(boolean forceUpdate) {
+        loadTasks(forceUpdate || mFirstLoad, true);
+        mFirstLoad = false;
+    }
+
     private void loadTasks(boolean forceUpdate, final boolean showLoadingUI) {
 
     }
@@ -63,6 +69,11 @@ public class TasksPresenter implements TasksContract.Presenter {
     @Override
     public void openTaskDetails(@NonNull String taskId) {
         mTasksView.showTaskDetail(taskId);
+    }
+
+    @Override
+    public void addNewTask() {
+        mTasksView.showAddTask();
     }
 
     @Override

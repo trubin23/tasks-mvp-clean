@@ -11,6 +11,8 @@ public interface TasksContract {
 
         void showTaskDetail(@NonNull String taskId);
 
+        void showAddTask();
+
         void showTaskMarkedComplete();
 
         void showTaskMarkedActive();
@@ -29,5 +31,9 @@ public interface TasksContract {
         void completeTask(@NonNull String taskId);
 
         void activateTask(@NonNull String taskId);
+
+        void loadTasks(boolean forceUpdate);
+
+        void addNewTask();
     }
 }
