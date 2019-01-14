@@ -22,4 +22,8 @@
     <string name="menu_completed">Completed</string>
 
     <string name="completed_tasks_cleared">Completed tasks cleared</string>
+
+    <string name="label_all">All tasks</string>
+    <string name="label_active">Active tasks</string>
+    <string name="label_completed">Completed tasks</string>
 </resources>

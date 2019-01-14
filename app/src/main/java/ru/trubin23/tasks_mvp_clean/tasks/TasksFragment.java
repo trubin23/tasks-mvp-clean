@@ -22,9 +22,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.List;
+
 import ru.trubin23.tasks_mvp_clean.R;
 import ru.trubin23.tasks_mvp_clean.addedittask.AddEditTaskActivity;
 import ru.trubin23.tasks_mvp_clean.taskdetail.TaskDetailActivity;
+import ru.trubin23.tasks_mvp_clean.tasks.domain.model.Task;
 import ru.trubin23.tasks_mvp_clean.tasks.tasklist.TaskItemListener;
 import ru.trubin23.tasks_mvp_clean.tasks.tasklist.TasksAdapter;
 
@@ -43,7 +46,7 @@ public class TasksFragment extends Fragment implements TasksContract.View {
     private ImageView mNoTasksIcon;
     private TextView mNoTasksText;
 
-    private SwipeRefreshLayout swipeRefreshLayout;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     private TaskItemListener mTaskItemListener = new TaskItemListener() {
         @Override
@@ -99,8 +102,8 @@ public class TasksFragment extends Fragment implements TasksContract.View {
             }
         }
 
-        swipeRefreshLayout = root.findViewById(R.id.refresh_layout);
-        swipeRefreshLayout.setOnRefreshListener(() -> mPresenter.loadTasks(false));
+        mSwipeRefreshLayout = root.findViewById(R.id.refresh_layout);
+        mSwipeRefreshLayout.setOnRefreshListener(() -> mPresenter.loadTasks(false));
 
         return root;
     }
@@ -109,6 +112,11 @@ public class TasksFragment extends Fragment implements TasksContract.View {
     public void onResume() {
         super.onResume();
         mPresenter.start();
+    }
+
+    @Override
+    public boolean isNotActive(){
+        return !isAdded();
     }
 
     @Override
@@ -194,5 +202,56 @@ public class TasksFragment extends Fragment implements TasksContract.View {
     @Override
     public void showCompletedTasksCleared(){
         showMessage(getString(R.string.completed_tasks_cleared));
+    }
+
+    @Override
+    public void setLoadingIndicator(boolean active){
+        mSwipeRefreshLayout.post(() -> mSwipeRefreshLayout.setRefreshing(active));
+    }
+
+    @Override
+    public void showTasks(@NonNull List<Task> tasks) {
+        mTasksAdapter.setTasks(tasks);
+
+        mTasksView.setVisibility(View.VISIBLE);
+        mNoTasksView.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showActiveFilterLabel() {
+        mFilteringLabel.setText(R.string.label_active);
+    }
+
+    @Override
+    public void showCompletedFilterLabel() {
+        mFilteringLabel.setText(R.string.label_completed);
+    }
+
+    @Override
+    public void showAllFilterLabel() {
+        mFilteringLabel.setText(R.string.label_all);
+    }
+
+    @Override
+    public void showNoActiveTasks() {
+        showNoTasksViews(R.string.no_tasks_active, R.drawable.ic_check_circle);
+    }
+
+    @Override
+    public void showNoCompletedTasks() {
+        showNoTasksViews(R.string.no_tasks_completed, R.drawable.ic_check_box);
+    }
+
+    @Override
+    public void showNoTasks() {
+        showNoTasksViews(R.string.no_tasks_all, R.drawable.ic_verified);
+    }
+
+    private void showNoTasksViews(int textRes, int iconRes) {
+        mTasksView.setVisibility(View.GONE);
+        mNoTasksView.setVisibility(View.VISIBLE);
+
+        mNoTasksIcon.setImageDrawable(getResources().getDrawable(iconRes));
+        mNoTasksText.setText(textRes);
     }
 }

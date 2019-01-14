@@ -2,8 +2,11 @@ package ru.trubin23.tasks_mvp_clean.tasks;
 
 import android.support.annotation.NonNull;
 
+import java.util.List;
+
 import ru.trubin23.tasks_mvp_clean.BasePresenter;
 import ru.trubin23.tasks_mvp_clean.BaseView;
+import ru.trubin23.tasks_mvp_clean.tasks.domain.model.Task;
 
 public interface TasksContract {
 
@@ -20,6 +23,24 @@ public interface TasksContract {
         void showLoadingTasksError();
 
         void showCompletedTasksCleared();
+
+        void setLoadingIndicator(boolean active);
+
+        boolean isNotActive();
+
+        void showTasks(@NonNull List<Task> tasks);
+
+        void showActiveFilterLabel();
+
+        void showCompletedFilterLabel();
+
+        void showAllFilterLabel();
+
+        void showNoActiveTasks();
+
+        void showNoCompletedTasks();
+
+        void showNoTasks();
     }
 
     interface Presenter extends BasePresenter {

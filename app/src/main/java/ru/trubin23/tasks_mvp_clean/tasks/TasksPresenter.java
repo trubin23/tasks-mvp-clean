@@ -1,9 +1,13 @@
 package ru.trubin23.tasks_mvp_clean.tasks;
 
+import android.app.Activity;
 import android.support.annotation.NonNull;
+
+import java.util.List;
 
 import ru.trubin23.tasks_mvp_clean.UseCase;
 import ru.trubin23.tasks_mvp_clean.UseCaseHandler;
+import ru.trubin23.tasks_mvp_clean.tasks.domain.model.Task;
 import ru.trubin23.tasks_mvp_clean.tasks.domain.usecase.ActivateTask;
 import ru.trubin23.tasks_mvp_clean.tasks.domain.usecase.ClearCompleteTasks;
 import ru.trubin23.tasks_mvp_clean.tasks.domain.usecase.CompleteTask;
@@ -53,7 +57,75 @@ public class TasksPresenter implements TasksContract.Presenter {
     }
 
     private void loadTasks(boolean forceUpdate, final boolean showLoadingUI) {
+        if (showLoadingUI) {
+            mTasksView.setLoadingIndicator(true);
+        }
 
+        GetTasks.RequestValues requestValues = new GetTasks.RequestValues(forceUpdate, mFilterType);
+
+        mUseCaseHandler.execute(mGetTasks, requestValues,
+            new UseCase.UseCaseCallback<GetTasks.ResponseValue>() {
+                @Override
+                public void onSuccess(GetTasks.ResponseValue response) {
+                    List<Task> tasks = response.getTasks();
+
+                    if (mTasksView.isNotActive()) {
+                        return;
+                    }
+                    if (showLoadingUI) {
+                        mTasksView.setLoadingIndicator(false);
+                    }
+
+                    processTasks(tasks);
+                }
+
+                @Override
+                public void onError() {
+                    if (mTasksView.isNotActive()) {
+                        return;
+                    }
+                    mTasksView.showLoadingTasksError();
+                }
+            });
+    }
+
+    private void processTasks(List<Task> tasks) {
+        if (tasks.isEmpty()) {
+            processEmptyTasks();
+        } else {
+            mTasksView.showTasks(tasks);
+            showFilterLabel();
+        }
+    }
+
+    private void processEmptyTasks() {
+        switch (mFilterType) {
+            case ACTIVE_TASKS:
+                mTasksView.showNoActiveTasks();
+                break;
+            case COMPLETED_TASKS:
+                mTasksView.showNoCompletedTasks();
+                break;
+            case ALL_TASKS:
+            default:
+                mTasksView.showNoTasks();
+                break;
+        }
+    }
+
+    private void showFilterLabel() {
+        switch (mFilterType) {
+            case ACTIVE_TASKS:
+                mTasksView.showActiveFilterLabel();
+                break;
+            case COMPLETED_TASKS:
+                mTasksView.showCompletedFilterLabel();
+                break;
+            case ALL_TASKS:
+            default:
+                mTasksView.showAllFilterLabel();
+                break;
+        }
     }
 
     @Override
