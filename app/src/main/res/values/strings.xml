@@ -26,4 +26,6 @@
     <string name="label_all">All tasks</string>
     <string name="label_active">Active tasks</string>
     <string name="label_completed">Completed tasks</string>
+
+    <string name="successfully_saved_task_message">Task saved</string>
 </resources>

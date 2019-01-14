@@ -47,7 +47,7 @@ public class TasksPresenter implements TasksContract.Presenter {
 
     @Override
     public void start() {
-
+        loadTasks(false);
     }
 
     @Override
@@ -64,29 +64,29 @@ public class TasksPresenter implements TasksContract.Presenter {
         GetTasks.RequestValues requestValues = new GetTasks.RequestValues(forceUpdate, mFilterType);
 
         mUseCaseHandler.execute(mGetTasks, requestValues,
-            new UseCase.UseCaseCallback<GetTasks.ResponseValue>() {
-                @Override
-                public void onSuccess(GetTasks.ResponseValue response) {
-                    List<Task> tasks = response.getTasks();
+                new UseCase.UseCaseCallback<GetTasks.ResponseValue>() {
+                    @Override
+                    public void onSuccess(GetTasks.ResponseValue response) {
+                        List<Task> tasks = response.getTasks();
 
-                    if (mTasksView.isNotActive()) {
-                        return;
-                    }
-                    if (showLoadingUI) {
-                        mTasksView.setLoadingIndicator(false);
+                        if (mTasksView.isNotActive()) {
+                            return;
+                        }
+                        if (showLoadingUI) {
+                            mTasksView.setLoadingIndicator(false);
+                        }
+
+                        processTasks(tasks);
                     }
 
-                    processTasks(tasks);
-                }
-
-                @Override
-                public void onError() {
-                    if (mTasksView.isNotActive()) {
-                        return;
+                    @Override
+                    public void onError() {
+                        if (mTasksView.isNotActive()) {
+                            return;
+                        }
+                        mTasksView.showLoadingTasksError();
                     }
-                    mTasksView.showLoadingTasksError();
-                }
-            });
+                });
     }
 
     private void processTasks(List<Task> tasks) {
@@ -183,7 +183,7 @@ public class TasksPresenter implements TasksContract.Presenter {
     }
 
     @Override
-    public void clearCompletedTask() {
+    public void clearCompletedTasks() {
         mUseCaseHandler.execute(mClearCompleteTasks, new ClearCompleteTasks.RequestValues(),
                 new UseCase.UseCaseCallback<ClearCompleteTasks.ResponseValue>() {
                     @Override
@@ -197,5 +197,12 @@ public class TasksPresenter implements TasksContract.Presenter {
                         mTasksView.showLoadingTasksError();
                     }
                 });
+    }
+
+    @Override
+    public void result(int requestCode, int resultCode) {
+        if (TasksActivity.REQUEST_ADD_TASK == requestCode && Activity.RESULT_OK == resultCode) {
+            mTasksView.showSuccessfullySavedMessage();
+        }
     }
 }

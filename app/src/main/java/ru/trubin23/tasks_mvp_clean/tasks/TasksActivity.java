@@ -17,6 +17,8 @@ import ru.trubin23.tasks_mvp_clean.util.ActivityUtils;
 
 public class TasksActivity extends AppCompatActivity {
 
+    public static final int REQUEST_ADD_TASK = 1;
+
     private static final String CURRENT_FILTERING_KEY = "CURRENT_FILTERING_KEY";
 
     private DrawerLayout mDrawerLayout;

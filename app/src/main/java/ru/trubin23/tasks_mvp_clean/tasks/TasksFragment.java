@@ -33,8 +33,6 @@ import ru.trubin23.tasks_mvp_clean.tasks.tasklist.TasksAdapter;
 
 public class TasksFragment extends Fragment implements TasksContract.View {
 
-    public static final int REQUEST_ADD_TASK = 1;
-
     private TasksContract.Presenter mPresenter;
 
     private TasksAdapter mTasksAdapter;
@@ -46,7 +44,7 @@ public class TasksFragment extends Fragment implements TasksContract.View {
     private ImageView mNoTasksIcon;
     private TextView mNoTasksText;
 
-    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private ScrollChildSwipeRefreshLayout mSwipeRefreshLayout;
 
     private TaskItemListener mTaskItemListener = new TaskItemListener() {
         @Override
@@ -103,6 +101,7 @@ public class TasksFragment extends Fragment implements TasksContract.View {
         }
 
         mSwipeRefreshLayout = root.findViewById(R.id.refresh_layout);
+        mSwipeRefreshLayout.setScrollUpChild(recyclerView);
         mSwipeRefreshLayout.setOnRefreshListener(() -> mPresenter.loadTasks(false));
 
         return root;
@@ -115,7 +114,7 @@ public class TasksFragment extends Fragment implements TasksContract.View {
     }
 
     @Override
-    public boolean isNotActive(){
+    public boolean isNotActive() {
         return !isAdded();
     }
 
@@ -134,7 +133,7 @@ public class TasksFragment extends Fragment implements TasksContract.View {
                 mPresenter.loadTasks(true);
                 return true;
             case R.id.menu_clear:
-                mPresenter.clearCompletedTask();
+                mPresenter.clearCompletedTasks();
                 return true;
         }
         return false;
@@ -165,8 +164,18 @@ public class TasksFragment extends Fragment implements TasksContract.View {
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        mPresenter.result(requestCode, resultCode);
+    }
+
+    @Override
     public void showTaskMarkedComplete() {
         showMessage(getString(R.string.task_marked_complete));
+    }
+
+    @Override
+    public void showTaskMarkedActive() {
+        showMessage(getString(R.string.task_marked_active));
     }
 
     @Override
@@ -179,12 +188,7 @@ public class TasksFragment extends Fragment implements TasksContract.View {
     @Override
     public void showAddTask() {
         Intent intent = new Intent(getContext(), AddEditTaskActivity.class);
-        startActivityForResult(intent, REQUEST_ADD_TASK);
-    }
-
-    @Override
-    public void showTaskMarkedActive() {
-        showMessage(getString(R.string.task_marked_active));
+        startActivityForResult(intent, TasksActivity.REQUEST_ADD_TASK);
     }
 
     private void showMessage(String message) {
@@ -200,12 +204,12 @@ public class TasksFragment extends Fragment implements TasksContract.View {
     }
 
     @Override
-    public void showCompletedTasksCleared(){
+    public void showCompletedTasksCleared() {
         showMessage(getString(R.string.completed_tasks_cleared));
     }
 
     @Override
-    public void setLoadingIndicator(boolean active){
+    public void setLoadingIndicator(boolean active) {
         mSwipeRefreshLayout.post(() -> mSwipeRefreshLayout.setRefreshing(active));
     }
 
@@ -253,5 +257,11 @@ public class TasksFragment extends Fragment implements TasksContract.View {
 
         mNoTasksIcon.setImageDrawable(getResources().getDrawable(iconRes));
         mNoTasksText.setText(textRes);
+    }
+
+    @Override
+    public void showSuccessfullySavedMessage() {
+        showMessage(getString(R.string.successfully_saved_task_message));
+        mPresenter.loadTasks(true);
     }
 }
