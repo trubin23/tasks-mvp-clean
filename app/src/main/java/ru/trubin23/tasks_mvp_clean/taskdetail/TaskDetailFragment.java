@@ -25,6 +25,10 @@ public class TaskDetailFragment extends Fragment implements TaskDetailContract.V
         mPresenter = presenter;
     }
 
+    public static TaskDetailFragment newInstance() {
+        return new TaskDetailFragment();
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,

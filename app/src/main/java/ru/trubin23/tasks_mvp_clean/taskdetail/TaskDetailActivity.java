@@ -5,6 +5,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
+import ru.trubin23.tasks_mvp_clean.Injection;
 import ru.trubin23.tasks_mvp_clean.R;
 import ru.trubin23.tasks_mvp_clean.util.ActivityUtils;
 
@@ -27,13 +28,24 @@ public class TaskDetailActivity extends AppCompatActivity {
 
         String taskId = getIntent().getStringExtra(SHOW_TASK_ID);
 
-        //TaskDetailFragment taskDetailFragment = (TaskDetailFragment)
-        //        getSupportFragmentManager().findFragmentById(R.id.content_frame);
-        //if (taskDetailFragment == null) {
-        //    taskDetailFragment = TaskDetailFragment.newInstance();
-        //    ActivityUtils.addFragmentToActivity(
-        //            getSupportFragmentManager(), taskDetailFragment, R.id.content_frame);
-        //}
+        TaskDetailFragment taskDetailFragment = (TaskDetailFragment)
+                getSupportFragmentManager().findFragmentById(R.id.contentFrame);
+
+        if (taskDetailFragment == null) {
+            taskDetailFragment = TaskDetailFragment.newInstance();
+            ActivityUtils.addFragmentToActivity(
+                    getSupportFragmentManager(), taskDetailFragment, R.id.contentFrame);
+        }
+
+        new TaskDetailPresenter(
+                Injection.provideUseCaseHandler(),
+                taskId,
+                taskDetailFragment,
+                Injection.provideGetTask(getApplicationContext()),
+                Injection.provideActivateTask(getApplicationContext()),
+                Injection.provideCompleteTask(getApplicationContext()),
+                Injection.provideDeleteTask(getApplicationContext()));
+        )
     }
 
     @Override
