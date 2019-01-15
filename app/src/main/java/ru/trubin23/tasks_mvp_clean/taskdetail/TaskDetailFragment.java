@@ -7,6 +7,9 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
@@ -48,6 +51,25 @@ public class TaskDetailFragment extends Fragment implements TaskDetailContract.V
                 .setOnClickListener(view -> mPresenter.editTask());
 
         return root;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mPresenter.start();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.task_detail_frag_menu, menu);
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        boolean deletePressed = item.getItemId() == R.id.menu_delete;
+        if (deletePressed) {
+            mPresenter.deleteTask();
+        }
+        return deletePressed;
     }
 
     @Override
@@ -130,5 +152,10 @@ public class TaskDetailFragment extends Fragment implements TaskDetailContract.V
     public void showTaskMarkedActivate() {
         Snackbar.make(getView(), getString(R.string.task_marked_active), Snackbar.LENGTH_LONG)
                 .show();
+    }
+
+    @Override
+    public void showTaskDeleted(){
+        getActivity().finish();
     }
 }

@@ -32,6 +32,8 @@ public interface TaskDetailContract {
         void showTaskMarkedComplete();
 
         void showTaskMarkedActivate();
+
+        void showTaskDeleted();
     }
 
     interface Presenter extends BasePresenter {
@@ -43,5 +45,7 @@ public interface TaskDetailContract {
         void completeTask();
 
         void activateTask();
+
+        void deleteTask();
     }
 }
