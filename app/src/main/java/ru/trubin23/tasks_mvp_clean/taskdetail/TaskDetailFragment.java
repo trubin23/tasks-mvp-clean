@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,7 +57,7 @@ public class TaskDetailFragment extends Fragment implements TaskDetailContract.V
     }
 
     @Override
-    public void showEditTask(String taskId) {
+    public void showEditTask(@NonNull String taskId) {
         Intent intent = new Intent(getContext(), AddEditTaskActivity.class);
         intent.putExtra(AddEditTaskActivity.EXTRA_TASK_ID, taskId);
         startActivityForResult(intent, TaskDetailActivity.REQUEST_EDIT_TASK);
@@ -76,5 +77,58 @@ public class TaskDetailFragment extends Fragment implements TaskDetailContract.V
     public void showLoadingIndicator() {
         mTitle.setText("");
         mDescription.setText(getString(R.string.loading));
+    }
+
+    @Override
+    public boolean isActive() {
+        return isAdded();
+    }
+
+    @Override
+    public void hideTitle() {
+        mDescription.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void showTitle(@NonNull String title) {
+        mTitle.setVisibility(View.VISIBLE);
+        mTitle.setText(title);
+    }
+
+    @Override
+    public void hideDescription() {
+        mDescription.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void showDescription(@NonNull String description) {
+        mDescription.setVisibility(View.VISIBLE);
+        mDescription.setText(description);
+    }
+
+    @Override
+    public void showCompletionStatus(boolean complete) {
+        mCompleteStatus.setChecked(complete);
+        mCompleteStatus.setOnCheckedChangeListener(
+                (view, isChecked) -> {
+                    if (isChecked) {
+                        mPresenter.completeTask();
+                    } else {
+                        mPresenter.activateTask();
+                    }
+                }
+        );
+    }
+
+    @Override
+    public void showTaskMarkedComplete() {
+        Snackbar.make(getView(), getString(R.string.task_marked_complete), Snackbar.LENGTH_LONG)
+                .show();
+    }
+
+    @Override
+    public void showTaskMarkedActivate() {
+        Snackbar.make(getView(), getString(R.string.task_marked_active), Snackbar.LENGTH_LONG)
+                .show();
     }
 }
