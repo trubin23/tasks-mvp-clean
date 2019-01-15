@@ -11,6 +11,8 @@ import ru.trubin23.tasks_mvp_clean.util.ActivityUtils;
 
 public class TaskDetailActivity extends AppCompatActivity {
 
+    public static final int REQUEST_EDIT_TASK = 1;
+
     public static final String SHOW_TASK_ID = "TASK_ID";
 
     @Override
@@ -45,7 +47,6 @@ public class TaskDetailActivity extends AppCompatActivity {
                 Injection.provideActivateTask(getApplicationContext()),
                 Injection.provideCompleteTask(getApplicationContext()),
                 Injection.provideDeleteTask(getApplicationContext()));
-        )
     }
 
     @Override
