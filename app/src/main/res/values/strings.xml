@@ -34,4 +34,7 @@
     <string name="loading">LOADING</string>
 
     <string name="menu_delete_task">Delete task</string>
+o
+    <string name="edit_task">Edit task</string>
+    <string name="add_task">Add task</string>
 </resources>

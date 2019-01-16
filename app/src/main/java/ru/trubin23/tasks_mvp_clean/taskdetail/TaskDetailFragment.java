@@ -156,6 +156,6 @@ public class TaskDetailFragment extends Fragment implements TaskDetailContract.V
 
     @Override
     public void showTaskDeleted(){
-        getActivity().finish();
+        exit();
     }
 }
