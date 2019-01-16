@@ -3,9 +3,11 @@ package ru.trubin23.tasks_mvp_clean.addedittask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import ru.trubin23.tasks_mvp_clean.UseCase;
 import ru.trubin23.tasks_mvp_clean.UseCaseHandler;
 import ru.trubin23.tasks_mvp_clean.addedittask.domain.usecase.GetTask;
 import ru.trubin23.tasks_mvp_clean.addedittask.domain.usecase.SaveTask;
+import ru.trubin23.tasks_mvp_clean.tasks.domain.model.Task;
 
 public class AddEditTaskPresenter implements AddEditTaskContract.Presenter {
 
@@ -39,11 +41,40 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter {
 
     @Override
     public void start() {
+        if (!isNewTask() && mIsDataMissing) {
+            populateTask();
+        }
+    }
+
+    private void populateTask(){
+        mUseCaseHandler.execute(mGetTask, new GetTask.RequestValues(mTaskId),
+            new UseCase.UseCaseCallback<GetTask.ResponseValue>() {
+                @Override
+                public void onSuccess(GetTask.ResponseValue response) {
+                    showTask(response.getTask());
+                }
+
+                @Override
+                public void onError() {
+                    showEmptyTaskError();
+                }
+            });
+    }
+
+    private void showTask(Task task) {
+
+    }
+
+    private void showEmptyTaskError() {
 
     }
 
     @Override
     public boolean isDataMissing() {
         return mIsDataMissing;
+    }
+
+    private boolean isNewTask() {
+        return mTaskId == null;
     }
 }

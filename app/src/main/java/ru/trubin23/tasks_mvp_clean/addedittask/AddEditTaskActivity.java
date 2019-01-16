@@ -6,6 +6,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
+import ru.trubin23.tasks_mvp_clean.Injection;
 import ru.trubin23.tasks_mvp_clean.R;
 import ru.trubin23.tasks_mvp_clean.util.ActivityUtils;
 
@@ -49,12 +50,13 @@ public class AddEditTaskActivity extends AppCompatActivity {
             shouldLoadDataFromRepo = savedInstanceState.getBoolean(SHOULD_LOAD_DATA_FROM_REPO);
         }
 
-        mAddEditTaskPresenter = new AddEditTaskPresenter();
-            //taskId,
-            //Injection.provideTasksRepository(getApplicationContext()),
-            //addEditTaskFragment,
-            //shouldLoadDataFromRepo,
-            //Injection.provideSchedulerProvider());
+        mAddEditTaskPresenter = new AddEditTaskPresenter(
+            Injection.provideUseCaseHandler(),
+            taskId,
+            addEditTaskFragment,
+            Injection.provideGetTask(getApplicationContext()),
+            Injection.provideSaveTask(getApplicationContext()),
+            shouldLoadDataFromRepo);
     }
 
     private void setToolbarTitle(@Nullable String taskId){
