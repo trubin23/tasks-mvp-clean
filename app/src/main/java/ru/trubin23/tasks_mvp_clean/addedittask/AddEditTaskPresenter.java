@@ -62,10 +62,21 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter {
     }
 
     private void showTask(Task task) {
-
+        if (mTaskDetailView.isActive()){
+            mTaskDetailView.setTitle(task.getTitle());
+            mTaskDetailView.setDescription(task.getDescription());
+        }
+        mIsDataMissing = false;
     }
 
     private void showEmptyTaskError() {
+        if (mTaskDetailView.isActive()){
+            mTaskDetailView.showEmptyTaskError();
+        }
+    }
+
+    @Override
+    public void saveTask(String title, String description) {
 
     }
 

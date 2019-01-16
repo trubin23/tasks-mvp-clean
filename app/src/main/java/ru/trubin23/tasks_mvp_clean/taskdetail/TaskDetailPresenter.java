@@ -36,12 +36,17 @@ public class TaskDetailPresenter implements TaskDetailContract.Presenter {
                         @NonNull CompleteTask completeTask,
                         @NonNull DeleteTask deleteTask) {
         mUseCaseHandler = useCaseHandler;
+
         mTaskId = taskId;
+
         mTaskDetailView = taskDetailView;
+
         mGetTask = getTask;
         mActivateTask = activateTask;
         mCompleteTask = completeTask;
         mDeleteTask = deleteTask;
+
+        mTaskDetailView.setPresenter(this);
     }
 
     @Override
