@@ -39,4 +39,10 @@
     <string name="add_task">Add task</string>
 
     <string name="empty_task_message">Task cannot be empty</string>
+
+    <string name="statistics_no_tasks">You have not tasks.</string>
+    <string name="statistics_active_tasks">Active tasks: </string>
+    <string name="statistics_completed_tasks">Completed tasks: </string>
+
+    <string name="statistics_error">Error loading statistics.</string>
 </resources>

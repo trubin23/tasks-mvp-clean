@@ -7,6 +7,14 @@ public interface StatisticsContract {
 
     interface View extends BaseView<Presenter> {
 
+        void showProgressIndicator();
+
+        void showStatistics(int numberOfActiveTasks, int numberOfCompletedTask);
+
+        void showLoadingStatisticsError();
+
+        boolean isActive();
+
     }
 
     interface Presenter extends BasePresenter {
