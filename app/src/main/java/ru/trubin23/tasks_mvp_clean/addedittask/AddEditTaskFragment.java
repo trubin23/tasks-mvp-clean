@@ -1,5 +1,6 @@
 package ru.trubin23.tasks_mvp_clean.addedittask;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -62,5 +63,11 @@ public class AddEditTaskFragment extends Fragment implements AddEditTaskContract
     @Override
     public void showEmptyTaskError() {
         Snackbar.make(mTitle, R.string.empty_task_message, Snackbar.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void showTasksList(){
+        getActivity().setResult(Activity.RESULT_OK);
+        getActivity().finish();
     }
 }

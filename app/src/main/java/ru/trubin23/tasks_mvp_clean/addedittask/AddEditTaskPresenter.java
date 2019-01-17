@@ -46,23 +46,23 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter {
         }
     }
 
-    private void populateTask(){
+    private void populateTask() {
         mUseCaseHandler.execute(mGetTask, new GetTask.RequestValues(mTaskId),
-            new UseCase.UseCaseCallback<GetTask.ResponseValue>() {
-                @Override
-                public void onSuccess(GetTask.ResponseValue response) {
-                    showTask(response.getTask());
-                }
+                new UseCase.UseCaseCallback<GetTask.ResponseValue>() {
+                    @Override
+                    public void onSuccess(GetTask.ResponseValue response) {
+                        showTask(response.getTask());
+                    }
 
-                @Override
-                public void onError() {
-                    showEmptyTaskError();
-                }
-            });
+                    @Override
+                    public void onError() {
+                        showEmptyTaskError();
+                    }
+                });
     }
 
     private void showTask(Task task) {
-        if (mTaskDetailView.isActive()){
+        if (mTaskDetailView.isActive()) {
             mTaskDetailView.setTitle(task.getTitle());
             mTaskDetailView.setDescription(task.getDescription());
         }
@@ -70,14 +70,18 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter {
     }
 
     private void showEmptyTaskError() {
-        if (mTaskDetailView.isActive()){
+        if (mTaskDetailView.isActive()) {
             mTaskDetailView.showEmptyTaskError();
         }
     }
 
     @Override
     public void saveTask(String title, String description) {
-
+        if (isNewTask()) {
+            createTask(title, description);
+        } else {
+            updateTask(title, description);
+        }
     }
 
     @Override
@@ -87,5 +91,44 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter {
 
     private boolean isNewTask() {
         return mTaskId == null;
+    }
+
+    private void createTask(String title, String description) {
+        Task task = new Task(title, description);
+        if (task.isEmpty()) {
+            mTaskDetailView.showEmptyTaskError();
+        } else {
+            mUseCaseHandler.execute(mSaveTask, new SaveTask.RequestValues(task),
+                    new UseCase.UseCaseCallback<SaveTask.ResponseValue>() {
+                        @Override
+                        public void onSuccess(SaveTask.ResponseValue response) {
+                            mTaskDetailView.showTasksList();
+                        }
+
+                        @Override
+                        public void onError() {
+                            //ignore
+                        }
+                    });
+        }
+    }
+
+    private void updateTask(String title, String description) {
+        if (isNewTask()) {
+            return;
+        }
+        Task task = new Task(title, description, mTaskId);
+        mUseCaseHandler.execute(mSaveTask, new SaveTask.RequestValues(task),
+                new UseCase.UseCaseCallback<SaveTask.ResponseValue>() {
+                    @Override
+                    public void onSuccess(SaveTask.ResponseValue response) {
+                        mTaskDetailView.showTasksList();
+                    }
+
+                    @Override
+                    public void onError() {
+                        //ignore
+                    }
+                });
     }
 }
